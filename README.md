@@ -4,10 +4,10 @@
 [![Versão](https://img.shields.io/badge/versão-0.1.0-blue)]()
 [![Licença](https://img.shields.io/badge/licença-acadêmica-lightgrey)]()
 
-**Instituição:** [PREENCHER]
-**Curso:** [PREENCHER]
+**Instituição:** [CEUB]
+**Curso:** [ADS]
 **Disciplina:** Desenvolvimento Web
-**Turma / Semestre:** [PREENCHER]
+**Turma / Semestre:** [2026.02]
 **Professor(a):** Felippe Pires Ferreira
 **Status do projeto:** Em desenvolvimento
 
