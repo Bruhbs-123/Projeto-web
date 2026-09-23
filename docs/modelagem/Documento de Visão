@@ -1,0 +1,46 @@
+# Documento de Visão — AdoteApp
+
+**Projeto:** AdoteApp — Plataforma de Adoção e Cuidados Animais  
+**Instituição:** CEUB — Centro Universitário de Brasília  
+**Curso:** Análise e Desenvolvimento de Sistemas (ADS)  
+**Disciplina:** Desenvolvimento Web  
+**Turma / Semestre:** 2026.2  
+**Professor:** Felippe Pires Ferreira  
+**Responsável pelo Documento:** Bruna parte 1 (Documentação / Visão)  
+
+---
+
+## 1. Declaração do Problema
+
+| Aspecto | Descrição |
+| --- | --- |
+| **O problema de** | Dispersão e desorganização das informações sobre animais disponíveis para adoção, aliada à dificuldade de tutores acompanharem o histórico de saúde e a rotina de cuidados pós-adoção. |
+| **Afeta** | ONGs, protetores independentes de animais, potenciais adotantes e tutores. |
+| **Cujo impacto é** | Processos de adoção burocráticos ou lentos devido a dados espalhados em redes sociais e planilhas, e a perda de controle sobre vacinas e consultas dos pets por falta de centralização. |
+| **Uma solução bem-sucedida seria** | Uma plataforma web unificada que centralize o cadastro e busca de animais para adoção com apoio de dados de CEP e raças, forneça painel de controle de saúde do pet e disponibilize uma API REST para integração com sites parceiros. |
+
+---
+
+## 2. Descrição do Público-Alvo e Stakeholders
+
+| Público-Alvo / Stakeholder | Descrição e Necessidades no Sistema |
+| --- | --- |
+| **ONGs e Protetores Independentes** | Necessitam cadastrar, editar e remover animais disponíveis para adoção (com espécie, porte, idade e localização), além de acompanhar relatórios mensais de adoções realizadas. |
+| **Tutores de Pets** | Necessitam registrar e consultar o histórico de vacinas e consultas de seus animais, além de contar com suporte a alertas e relatórios de vacinas pendentes. |
+| **Potenciais Adotantes** | Necessitam de uma ferramenta de busca eficiente com filtros por porte, idade, espécie e localização (CEP) para encontrar animais para adoção. |
+| **Sites Parceiros** | Necessitam consumir a API REST pública (`GET /api/animais`) para exibir o catálogo de animais disponíveis em suas próprias plataformas. |
+
+---
+
+## 3. Objetivos do Projeto
+
+### 3.1 Objetivo Geral
+Desenvolver uma aplicação web em Python/Django que centralize o cadastro e a busca de animais para adoção, além de automatizar o acompanhamento do histórico de saúde (vacinas e consultas) de pets adotados.
+
+### 3.2 Objetivos Específicos
+- **Gestão de Adoção:** Permitir que ONGs e protetores gerenciem o CRUD completo (criação, leitura, atualização e exclusão) de animais disponíveis para adoção.
+- **Gestão de Saúde:** Permitir que tutores registrem e visualizem o histórico de vacinas e consultas dos seus animais de forma organizada.
+- **Filtros e Busca:** Implementar sistema de busca de pets combinando porte, idade, espécie e localização geográfica via CEP.
+- **Relatórios:** Gerar relatórios automatizados de adoções concluídas no mês e calendário de vacinas a vencer.
+- **API REST Própria:** Expor o endpoint público `GET /api/animais` para disponibilizar a lista de animais para consumo externo.
+- **Integração com APIs Externas:** Consumir a API **ViaCEP** para autocompletar endereços de tutores/abrigos e as **Dog API / Cat API** para sugestão de fotos e informações sobre raças no cadastro.
