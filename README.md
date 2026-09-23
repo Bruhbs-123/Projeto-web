@@ -1,17 +1,15 @@
-# [Nome do Projeto]
+# AdoteApp
 
-> Substitua os trechos entre colchetes `[ ]` pelas informações reais do trabalho. Remova esta nota e as demais orientações em *itálico* antes da entrega.
+[![Status](https://img.shields.io/badge/status-em_desenvolvimento-yellow)]()
+[![Versão](https://img.shields.io/badge/versão-0.1.0-blue)]()
+[![Licença](https://img.shields.io/badge/licença-acadêmica-lightgrey)]()
 
-[![Status](https://img.shields.io/badge/status-[em_desenvolvimento]-yellow)]()
-[![Versão](https://img.shields.io/badge/versão-[0.1.0]-blue)]()
-[![Licença](https://img.shields.io/badge/licença-[acadêmica]-lightgrey)]()
-
-**Instituição:** [Nome da instituição]  
-**Curso:** [Nome do curso]  
-**Disciplina:** [Nome da disciplina]  
-**Turma / Semestre:** [Ex.: 2026.2]  
-**Professor(a):** [Nome completo]  
-**Status do projeto:** [Protótipo / MVP / Em desenvolvimento / Concluído]
+**Instituição:** [PREENCHER]
+**Curso:** [PREENCHER]
+**Disciplina:** Desenvolvimento Web
+**Turma / Semestre:** [PREENCHER]
+**Professor(a):** Felippe Pires Ferreira
+**Status do projeto:** Em desenvolvimento
 
 ---
 
@@ -37,143 +35,152 @@
 
 ## 1. Descrição do projeto
 
-*Apresente o contexto, o problema e a solução proposta. Use linguagem objetiva (dois a quatro parágrafos).*
+A AdoteApp é uma plataforma web que conecta ONGs e protetores de animais a possíveis adotantes, ao mesmo tempo em que ajuda tutores a organizar a rotina de cuidados dos seus pets. De um lado, abrigos e protetores cadastram animais disponíveis para adoção, com informações como espécie, porte, idade e localização. Do outro, tutores acompanham o histórico de vacinas e consultas de seus animais, com apoio de preenchimento automático de endereço e importação de dados de raça.
 
-[Descreva o que o sistema faz, para quem ele se destina e qual problema ele resolve.]
+O problema que o projeto ataca é a dispersão de informações sobre animais para adoção e a dificuldade de acompanhar a saúde do pet após a adoção — informações que hoje costumam ficar espalhadas em redes sociais, planilhas ou na memória do tutor.
 
 ### Objetivos
 
-*Liste os objetivos gerais e específicos do projeto.*
-
-- **Objetivo geral:** [Ex.: desenvolver uma aplicação web para gerenciar reservas de laboratórios.]
+- **Objetivo geral:** desenvolver uma aplicação web que centralize o cadastro de animais para adoção e o acompanhamento da rotina de cuidados (vacinas e consultas) dos pets já adotados.
 - **Objetivos específicos:**
-  - [Ex.: permitir cadastro e autenticação de usuários.]
-  - [Ex.: registrar e consultar reservas por data e laboratório.]
-  - [Ex.: gerar relatórios de ocupação.]
+  - Permitir que ONGs/protetores cadastrem, editem e removam animais disponíveis para adoção.
+  - Permitir que tutores registrem e consultem o histórico de vacinas e consultas de seus pets.
+  - Buscar animais disponíveis por porte, idade, espécie ou localização (CEP).
+  - Gerar relatórios de adoções realizadas no mês e de vacinas pendentes.
+  - Expor uma API REST pública com a lista de animais disponíveis, consumível por sites parceiros.
+  - Integrar a ViaCEP (preenchimento automático de endereço) e a Dog API / Cat API (dados e fotos de raças).
 
 ### Público-alvo
 
-- [Ex.: estudantes da instituição]
-- [Ex.: professores responsáveis pelos laboratórios]
-- [Ex.: equipe administrativa]
+- ONGs e protetores independentes de animais
+- Tutores de pets adotados, que precisam gerenciar vacinas e consultas
+- Sites parceiros interessados em exibir animais disponíveis para adoção via API
 
 ---
 
 ## 2. Funcionalidades
 
-*Liste as funções implementadas (ou previstas) no sistema. Marque o status de cada uma.*
-
 | Funcionalidade | Descrição | Status |
 | --- | --- | --- |
-| [Ex.: Autenticação] | [Ex.: login, logout e recuperação de senha] | [Implementada / Em andamento / Planejada] |
-| [Ex.: Cadastro de usuários] | [Ex.: criação e edição de perfis] | [Implementada / Em andamento / Planejada] |
-| [Ex.: Relatórios] | [Ex.: exportação em PDF] | [Implementada / Em andamento / Planejada] |
+| Cadastro de animais | Criação, edição, exclusão e visualização de animais disponíveis para adoção | Planejada |
+| Cadastro de tutores e abrigos | Registro de tutores e abrigos/protetores, com endereço preenchido via ViaCEP | Planejada |
+| Histórico de vacinas e consultas | Registro e consulta do histórico de saúde de cada animal | Planejada |
+| Busca de animais | Filtro por porte, idade, espécie e localização (CEP) | Planejada |
+| Relatório de adoções | Animais adotados no mês, com filtros | Planejada |
+| Relatório de vacinas pendentes | Calendário de vacinas a vencer | Planejada |
+| API REST própria | Endpoint público (`GET /api/animais`) para consumo por terceiros | Planejada |
+| Importação de dados de raça | Consumo da Dog API / Cat API ao cadastrar um animal | Planejada |
+| Identidade visual | Paleta, tipografia e logotipo aplicados de forma consistente | Planejada |
+
+*Atualize a coluna “Status” (Implementada / Em andamento / Planejada) conforme o desenvolvimento avança.*
 
 ### Requisitos não funcionais
 
-*Informe restrições de qualidade, quando existirem.*
-
-- **Desempenho:** [Ex.: respostas da API em menos de 2 segundos]
-- **Segurança:** [Ex.: senhas armazenadas com hash; HTTPS em produção]
-- **Usabilidade:** [Ex.: interface responsiva para desktop e celular]
-- **Disponibilidade:** [Ex.: uso em ambiente local / laboratório da disciplina]
+- **Desempenho:** [PREENCHER — ex.: respostas da API em menos de 2 segundos]
+- **Segurança:** senhas armazenadas com hash; HTTPS em produção; `DEBUG=False`; segredos fora do repositório
+- **Usabilidade:** interface responsiva para desktop e dispositivos móveis
+- **Disponibilidade:** aplicação publicada em domínio/subdomínio acessível durante o período de avaliação
 
 ---
 
 ## 3. Demonstração
 
-*Inclua capturas de tela, GIF ou link para vídeo. Coloque as imagens em `images/`.*
+*Inclua capturas de tela reais em `images/` assim que as telas estiverem prontas.*
 
 ![Tela principal](images/[screenshot-principal].png)
 
 | Tela | Descrição |
 | --- | --- |
-| [Login] | [Acesso ao sistema com e-mail e senha] |
-| [Painel] | [Visão geral das reservas do dia] |
+| Lista de animais | Catálogo de animais disponíveis, com filtros de busca |
+| Ficha do animal | Detalhes do pet, incluindo dados importados da Dog/Cat API |
+| Cadastro de tutor/abrigo | Formulário com endereço preenchido automaticamente via ViaCEP |
+| Painel de vacinas | Histórico e calendário de vacinas por animal |
 
-**Vídeo / protótipo:** [URL do YouTube, Loom ou Figma]
+**Vídeo / protótipo:** [PREENCHER — link do protótipo (Figma) ou vídeo de demonstração]
 
 ---
 
 ## 4. Tecnologias utilizadas
 
-*Informe as tecnologias de fato usadas no projeto. Remova as linhas que não se aplicarem.*
-
 | Camada | Tecnologia | Versão |
 | --- | --- | --- |
-| Linguagem | [Ex.: Python, Java, TypeScript] | [Ex.: 3.12] |
-| Frontend | [Ex.: HTML, CSS, React] | [Ex.: 18] |
-| Backend | [Ex.: Flask, Spring Boot, Node.js] | [Ex.: 3.x] |
-| Banco de dados | [Ex.: PostgreSQL, SQLite, MongoDB] | [Ex.: 16] |
-| Testes | [Ex.: pytest, JUnit, Jest] | [Ex.: 8] |
-| Infraestrutura | [Ex.: Docker, GitHub Actions] | — |
-| Outras ferramentas | [Ex.: Git, Figma, Postman] | — |
+| Linguagem | Python | [PREENCHER] |
+| Backend | Django | [PREENCHER] |
+| API REST | Django REST Framework | [PREENCHER] |
+| Banco de dados | [PREENCHER — ex.: PostgreSQL] | [PREENCHER] |
+| Frontend | Templates Django + HTML/CSS | — |
+| Testes | [PREENCHER — ex.: pytest] | [PREENCHER] |
+| Infraestrutura | [PREENCHER — ex.: Docker, GitHub Actions] | — |
+| Outras ferramentas | Git, [PREENCHER — ex.: Figma, Postman] | — |
+| APIs externas | ViaCEP, Dog API / Cat API | — |
 
 ---
 
 ## 5. Arquitetura
 
-*Explique como o sistema está organizado: camadas, principais componentes e o fluxo entre eles. Inclua um diagrama no PDF de arquitetura ou de classes em `docs/` e descreva-o em texto.*
-
-[Ex.: a solução segue uma arquitetura em camadas (apresentação, aplicação, domínio e persistência). O frontend consome uma API REST. O backend aplica as regras de negócio e persiste os dados no banco.]
+A solução segue uma arquitetura em camadas típica de aplicações Django: apresentação (templates), aplicação (views), domínio (models) e persistência (banco de dados relacional). O backend também expõe uma API REST própria, consumida por terceiros, e consome duas APIs externas (ViaCEP e Dog/Cat API) para enriquecer o cadastro de tutores/abrigos e de animais.
 
 ```text
-[Usuário] → [Interface / Frontend] → [API / Backend] → [Banco de dados]
+[Usuário / Site parceiro] → [Templates / API REST] → [Views Django] → [Models] → [Banco de dados]
+                                                              ↓
+                                          [ViaCEP]  [Dog API / Cat API]
 ```
 
 **Decisões relevantes:**
 
-- [Ex.: uso de API REST para separar cliente e servidor.]
-- [Ex.: persistência relacional porque os dados possuem relacionamentos bem definidos.]
+- Uso de API REST própria (DRF) para permitir que sites parceiros consumam a lista de animais disponíveis.
+- Persistência relacional, pois as entidades (Animal, Tutor, Abrigo, Vacina, Consulta, Adoção) têm relacionamentos bem definidos entre si.
+- Integração com a ViaCEP no cadastro de tutores/abrigos, com o endereço resultante sendo usado depois na busca por localização — não é uma chamada isolada.
+- Integração com a Dog API / Cat API no cadastro de animais, para sugerir dados e fotos de raça.
 
-### Endpoints principais (quando houver API)
+### Endpoints principais
 
 | Método | Rota | Descrição |
 | --- | --- | --- |
-| `POST` | `/api/[recurso]` | [Ex.: criar um registro] |
-| `GET` | `/api/[recurso]` | [Ex.: listar registros] |
-| `GET` | `/api/[recurso]/{id}` | [Ex.: obter um registro] |
-| `PUT` | `/api/[recurso]/{id}` | [Ex.: atualizar um registro] |
-| `DELETE` | `/api/[recurso]/{id}` | [Ex.: remover um registro] |
+| `GET` | `/api/animais` | Lista animais disponíveis para adoção, com filtros de porte/idade/espécie/CEP |
+| `GET` | `/api/animais/{id}` | Detalhes de um animal específico |
+| `POST` | `/api/animais` | Cadastra um novo animal *(uso interno/autenticado)* |
+| `PUT` | `/api/animais/{id}` | Atualiza um animal *(uso interno/autenticado)* |
+| `DELETE` | `/api/animais/{id}` | Remove um animal *(uso interno/autenticado)* |
 
-Documentação completa da API: [link para Swagger, Postman ou `docs/api.md`]
+Documentação completa da API: [PREENCHER — link para Swagger/Redoc ou `docs/api.md`]
 
 ---
 
 ## 6. Organização dos diretórios
 
-*Mantenha a árvore alinhada à estrutura real do repositório. Ajuste pastas conforme o tipo de projeto.*
-
 ```text
 .
 ├── README.md                 # Documentação principal do projeto
-├── .env.example              # Modelo de variáveis de ambiente (sem segredos)
-├── docs/                     # Modelagem e demais artefatos técnicos (PDF)
-│   ├── README.pdf            # Índice da pasta docs/
-│   └── modelagem/
-│       ├── casos-de-uso/
-│       │   └── especificacoes-casos-de-uso.pdf
-│       ├── classes/
-│       │   └── diagrama-de-classes.pdf
-│       └── banco-de-dados/
-│           ├── diagrama-er.pdf
-│           └── modelo-logico.pdf
-├── images/                   # Figuras da documentação geral (ex.: política de IA)
-├── src/                      # Código-fonte da aplicação
-│   ├── frontend/             # Interface com o usuário (quando houver)
-│   └── backend/              # Regras de negócio, API e acesso a dados (quando houver)
-├── tests/                    # Testes automatizados
-└── scripts/                  # Scripts auxiliares de setup, build ou deploy
+├── .env.example               # Modelo de variáveis de ambiente (sem segredos)
+├── docs/                      # Modelagem e demais artefatos técnicos (PDF)
+│   ├── README.pdf              # Índice da pasta docs/
+│   ├── visao/                  # Documento de Visão
+│   ├── casos-de-uso/           # Diagrama UML + especificações textuais
+│   ├── arquitetura/            # Diagramas de componentes/implantação
+│   ├── banco-de-dados/         # Modelo ER e modelo lógico
+│   ├── api/                    # Contrato da API própria e referências da API externa
+│   ├── prototipos/             # Identidade visual e protótipos de telas
+│   ├── planejamento/           # Backlog, cronograma e responsabilidades
+│   └── seguranca/              # Relatórios SAST/DAST
+├── images/                    # Figuras da documentação geral
+├── src/                       # Código-fonte da aplicação Django
+│   ├── animais/                 # App: cadastro de animais
+│   ├── tutores/                 # App: tutores e abrigos
+│   └── saude/                   # App: vacinas e consultas
+├── tests/                     # Testes automatizados
+└── scripts/                   # Scripts auxiliares de setup, build ou deploy
 ```
 
 | Diretório / arquivo | Função |
 | --- | --- |
 | `README.md` | Apresentação do projeto, objetivos, tecnologias e instruções de uso |
 | `.env.example` | Lista das variáveis necessárias, sem credenciais reais |
-| `docs/` | Artefatos de análise e modelagem em PDF |
-| `docs/modelagem/` | Casos de uso, classes e modelo de dados (diagramas embutidos nos PDFs) |
-| `images/` | Figuras da documentação geral do repositório (não usar para diagramas de modelagem) |
-| `src/` | Código-fonte organizado por camada ou módulo |
+| `docs/` | Artefatos de análise e modelagem |
+| `docs/planejamento/` | Cronograma e divisão de tarefas entre a equipe |
+| `docs/seguranca/` | Relatórios SAST e DAST |
+| `images/` | Figuras da documentação geral do repositório |
+| `src/` | Código-fonte organizado por app Django |
 | `tests/` | Casos de teste e evidências de verificação |
 | `scripts/` | Automação de ambiente e execução |
 
@@ -181,29 +188,25 @@ Documentação completa da API: [link para Swagger, Postman ou `docs/api.md`]
 
 ## 7. Participantes
 
-*Informe nome completo, função no grupo e, se houver, o identificador acadêmico (matrícula).*
-
 | Nome | Matrícula | Função no projeto |
 | --- | --- | --- |
-| [Nome completo] | [000000] | [Ex.: coordenação / backend / frontend / testes / documentação] |
-| [Nome completo] | [000000] | [Ex.: backend] |
-| [Nome completo] | [000000] | [Ex.: frontend] |
-| [Nome completo] | [000000] | [Ex.: testes e documentação] |
+| Bruna | [PREENCHER] | Documentação / Visão |
+| Rafael | [PREENCHER] | Arquitetura / Dados |
+| Isadora | [PREENCHER] | Design / Identidade Visual |
+| Ana Clara | [PREENCHER] | Dev Backend |
+| Renata | [PREENCHER] | Dev Integração (busca, relatórios, APIs externas) |
 
-**Professor(a) responsável:** [Nome completo]
+**Professor(a) responsável:** Felippe Pires Ferreira
 
 ---
 
 ## 8. Como executar
 
-*Preencha com os comandos reais do projeto para que outra pessoa consiga reproduzir o ambiente.*
-
 ### Pré-requisitos
 
-- [Ex.: Git]
-- [Ex.: Python 3.12+]
-- [Ex.: Node.js 20+]
-- [Ex.: Docker]
+- Git
+- Python [PREENCHER — versão]
+- [PREENCHER — outros pré-requisitos, ex.: Docker]
 
 ### Instalação e execução
 
@@ -212,36 +215,44 @@ Documentação completa da API: [link para Swagger, Postman ou `docs/api.md`]
 git clone [URL_DO_REPOSITORIO]
 cd [NOME_DA_PASTA]
 
-# 2. Instalar dependências
-[comando de instalação]
+# 2. Criar e ativar ambiente virtual
+python -m venv venv
+source venv/bin/activate  # Windows: venv\Scripts\activate
 
-# 3. Configurar variáveis de ambiente
+# 3. Instalar dependências
+pip install -r requirements.txt
+
+# 4. Configurar variáveis de ambiente
 cp .env.example .env
 # edite o arquivo .env com as credenciais locais
 
-# 4. Executar a aplicação
-[comando de execução]
+# 5. Aplicar migrations
+python manage.py migrate
+
+# 6. Executar a aplicação
+python manage.py runserver
 ```
 
-**Acesso local:** [Ex.: http://localhost:3000]
+**Acesso local:** http://localhost:8000
 
-### Implantação (quando houver)
+### Implantação
 
-- **Ambiente:** [Ex.: Render, Railway, Vercel, servidor da instituição]
-- **URL de produção:** [https://...]
-- **Observações:** [Ex.: é necessário configurar as variáveis de ambiente no painel do provedor]
+- **Ambiente:** [PREENCHER — ex.: Render, Railway]
+- **URL de produção:** [PREENCHER]
+- **Observações:** [PREENCHER — ex.: configurar variáveis de ambiente no painel do provedor]
 
 ---
 
 ## 9. Configuração
 
-*Liste as variáveis de ambiente usadas pelo sistema. Nunca publique senhas, tokens ou chaves neste arquivo.*
-
 | Variável | Obrigatória | Descrição | Exemplo |
 | --- | --- | --- | --- |
-| `PORT` | Sim | Porta da aplicação | `3000` |
-| `DATABASE_URL` | Sim | Conexão com o banco | `postgresql://user:senha@localhost:5432/app` |
-| `SECRET_KEY` | Sim | Chave de sessão / JWT | `[gerar localmente]` |
+| `SECRET_KEY` | Sim | Chave de segurança do Django | `[gerar localmente]` |
+| `DEBUG` | Sim | Modo de depuração (deve ser `False` em produção) | `False` |
+| `ALLOWED_HOSTS` | Sim | Hosts autorizados a servir a aplicação | `petmatch.exemplo.com` |
+| `DATABASE_URL` | Sim | Conexão com o banco de dados | `postgresql://user:senha@localhost:5432/petmatch` |
+| `VIACEP_BASE_URL` | Não | URL-base da ViaCEP (caso configurável) | `https://viacep.com.br` |
+| `DOG_API_KEY` / `CAT_API_KEY` | Depende da API | Chave de acesso à Dog API / Cat API, se exigida | `[gerar na plataforma da API]` |
 
 Credenciais reais devem ficar apenas no arquivo `.env` (não versionado).
 
@@ -249,19 +260,17 @@ Credenciais reais devem ficar apenas no arquivo `.env` (não versionado).
 
 ## 10. Testes
 
-*Descreva como executar os testes e o que eles cobrem.*
-
 ```bash
-[comando para executar os testes]
+[PREENCHER — comando para executar os testes, ex.: pytest]
 ```
 
 | Tipo | Ferramenta | O que verifica |
 | --- | --- | --- |
-| Unitários | [Ex.: pytest / JUnit / Jest] | [Ex.: regras de negócio isoladas] |
-| Integração | [Ex.: ...] | [Ex.: API e banco de dados] |
-| Manuais | [Ex.: checklist em `docs/`] | [Ex.: fluxos principais da interface] |
+| Unitários | [PREENCHER] | Regras de negócio isoladas (ex.: cálculo de vacinas pendentes) |
+| Integração | [PREENCHER] | API própria e integração com banco de dados |
+| Manuais | Checklist em `docs/` | Fluxos principais: cadastro, busca, relatório, integração externa |
 
-**Cobertura atual:** [Ex.: 70% / não medida]
+**Cobertura atual:** [PREENCHER]
 
 ---
 
@@ -279,18 +288,18 @@ Este repositório segue a política de uso de IA da disciplina (semáforo pedag�
 
 ### Declaração de uso
 
-*Preencha de forma honesta. Se não houve uso de IA, declare explicitamente.*
+> Este campo precisa ser preenchido honestamente pela equipe, refletindo o uso real feito durante o desenvolvimento. Não preenchi por vocês.
 
-- **Houve uso de IA neste projeto?** [Sim / Não]
-- **Ferramentas utilizadas:** [Ex.: ChatGPT, GitHub Copilot, Gemini — ou “nenhuma”]
-- **Finalidade:** [Ex.: revisão de texto, geração de esboço de testes, esclarecimento de dúvidas de sintaxe]
-- **O que NÃO foi delegado à IA:** [Ex.: definição do problema, modelagem, implementação das regras de negócio, testes finais]
+- **Houve uso de IA neste projeto?** [PREENCHER — Sim / Não]
+- **Ferramentas utilizadas:** [PREENCHER — ex.: ChatGPT, GitHub Copilot, Claude — ou "nenhuma"]
+- **Finalidade:** [PREENCHER — ex.: revisão de texto, geração de esboço de testes, dúvidas de sintaxe]
+- **O que NÃO foi delegado à IA:** [PREENCHER — ex.: definição do problema, modelagem, implementação das regras de negócio, testes finais]
+
+*Lembrete: a especificação do projeto (Documento de Visão, casos de uso, arquitetura etc.) precisa ser produzida individualmente por cada aluno, sem uso de IA generativa para gerar o conteúdo diretamente — conforme a orientação do próprio enunciado.*
 
 ---
 
 ## 12. Contribuição e fluxo de trabalho
-
-*Padronize o trabalho em equipe. Ajuste as regras ao combinado da disciplina.*
 
 ### Branches
 
@@ -304,29 +313,26 @@ Este repositório segue a política de uso de IA da disciplina (semáforo pedag�
 
 Use mensagens curtas e no imperativo, por exemplo:
 
-- `feat: adiciona cadastro de reservas`
-- `fix: corrige validação de data`
-- `docs: atualiza instruções de execução`
+- `feat: adiciona cadastro de animais`
+- `fix: corrige filtro de busca por CEP`
+- `docs: atualiza cronograma de planejamento`
 
 ### Passos sugeridos
 
 1. Criar uma branch a partir de `main`.
 2. Implementar e testar localmente.
-3. Abrir um *pull request* / *merge request* para revisão do grupo.
+3. Abrir um *pull request* para revisão do grupo.
 4. Só então integrar à branch principal.
 
-**Issues e quadro de tarefas:** [link do GitHub Projects, Trello ou similar]
+**Issues e quadro de tarefas:** [PREENCHER — link do GitHub Projects, Trello ou similar]
 
 ---
 
 ## 13. Histórico de versões
 
-*Registre entregas relevantes (sprints, checkpoints ou versões avaliadas).*
-
 | Versão | Data | Descrição |
 | --- | --- | --- |
-| `0.1.0` | [AAAA-MM-DD] | [Ex.: primeira versão executável / MVP] |
-| `0.0.1` | [AAAA-MM-DD] | [Ex.: estrutura inicial do repositório] |
+| `0.1.0` | [PREENCHER] | Estrutura inicial do repositório e documentação da Fase 1 |
 
 ---
 
@@ -334,39 +340,40 @@ Use mensagens curtas e no imperativo, por exemplo:
 
 ### Problemas conhecidos
 
-- [Ex.: a recuperação de senha ainda não envia e-mail]
-- [Ex.: o layout quebra em telas menores que 360 px]
+- [PREENCHER conforme o desenvolvimento avança]
 
 ### Roadmap
 
-- [ ] [Ex.: autenticação com dois fatores]
-- [ ] [Ex.: exportação de relatórios em CSV]
-- [ ] [Ex.: implantação em ambiente de homologação]
+- [ ] Implementar autenticação de tutores e ONGs/abrigos
+- [ ] Implementar API REST própria (`GET /api/animais`)
+- [ ] Integrar ViaCEP no cadastro de tutores/abrigos
+- [ ] Integrar Dog API / Cat API no cadastro de animais
+- [ ] Executar e documentar análises SAST e DAST
+- [ ] Publicar aplicação com HTTPS
 
 ---
 
 ## 15. Licença, referências e contato
 
-**Licença:** [Ex.: uso exclusivamente acadêmico / MIT / outro]
+**Licença:** Uso exclusivamente acadêmico
 
-Este material destina-se a fins educacionais. Verifique com a disciplina se o código pode ser reutilizado fora do curso.
+Este material destina-se a fins educacionais.
 
 ### Documentação complementar
 
 - Índice da pasta `docs/`: [`docs/README.pdf`](docs/README.pdf)
-- Casos de uso (diagrama + especificações): [`docs/modelagem/casos-de-uso/especificacoes-casos-de-uso.pdf`](docs/modelagem/casos-de-uso/especificacoes-casos-de-uso.pdf)
-- Diagrama de classes: [`docs/modelagem/classes/diagrama-de-classes.pdf`](docs/modelagem/classes/diagrama-de-classes.pdf)
-- Modelo conceitual (ER): [`docs/modelagem/banco-de-dados/diagrama-er.pdf`](docs/modelagem/banco-de-dados/diagrama-er.pdf)
-- Modelo lógico: [`docs/modelagem/banco-de-dados/modelo-logico.pdf`](docs/modelagem/banco-de-dados/modelo-logico.pdf)
-- Apresentação: [`docs/apresentacao.pdf`](docs/)
+- Casos de uso: [`docs/casos-de-uso/`](docs/casos-de-uso/)
+- Diagrama de arquitetura: [`docs/arquitetura/`](docs/arquitetura/)
+- Modelo de dados (ER): [`docs/banco-de-dados/`](docs/banco-de-dados/)
+- Contrato da API: [`docs/api/`](docs/api/)
+- Cronograma de planejamento: [`docs/planejamento/cronograma.docx`](docs/planejamento/cronograma.docx)
 
 ### Referências
 
-- [Autor. Título. Ano. URL ou dados bibliográficos.]
-- [Documentação oficial da tecnologia X.]
+- [PREENCHER — bibliografia consultada, documentação oficial das tecnologias usadas]
 
 ### Contato
 
-Dúvidas sobre o projeto: [e-mail institucional do grupo ou issue no repositório]
+Dúvidas sobre o projeto: [PREENCHER — e-mail institucional do grupo ou issue no repositório]
 
-**Agradecimentos:** [Ex.: professor(a), monitoria, materiais da disciplina]
+**Agradecimentos:** Professor Felippe Pires Ferreira
