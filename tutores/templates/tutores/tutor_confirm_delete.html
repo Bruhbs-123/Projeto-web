@@ -1,0 +1,6 @@
+<h1>Excluir {{ object }}?</h1>
+<form method="post">
+  {% csrf_token %}
+  <button type="submit">Confirmar</button>
+</form>
+<a href="{% url 'tutor-list' %}">Cancelar</a>

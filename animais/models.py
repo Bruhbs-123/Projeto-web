@@ -24,6 +24,7 @@ class Animal(models.Model):
     foto_url = models.URLField(blank=True, null=True)
     tutor = models.ForeignKey(Tutor, on_delete=models.SET_NULL, null=True, blank=True, related_name='animais')
     disponivel_adocao = models.BooleanField(default=True)
+    data_adocao = models.DateField(null=True, blank=True)
 
     def __str__(self):
         return f"{self.nome} ({self.especie})"
