@@ -1,7 +1,60 @@
-<h1>Tutor</h1>
-<form method="post">
-  {% csrf_token %}
-  {{ form.as_p }}
-  <button type="submit">Salvar</button>
-</form>
-<a href="{% url 'tutor-list' %}">Voltar</a>
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Tutor</title>
+</head>
+<body>
+    <h1>Tutor</h1>
+
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+
+        <button type="submit">Salvar</button>
+    </form>
+
+    <a href="{% url 'tutor-list' %}">Voltar</a>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    var campoCep = document.getElementById('id_cep');
+    var campoEndereco = document.getElementById('id_endereco');
+
+    var mensagem = document.createElement('span');
+    campoCep.insertAdjacentElement('afterend', mensagem);
+
+    campoCep.addEventListener('blur', function () {
+        var cep = campoCep.value.replace(/\D/g, '');
+
+        if (cep === '') {
+            mensagem.textContent = '';
+            return;
+        }
+
+        mensagem.textContent = ' Buscando endereço...';
+
+        fetch('/tutores/cep/' + cep + '/')
+            .then(function (resposta) {
+                return resposta.json().then(function (dados) {
+                    return { ok: resposta.ok, dados: dados };
+                });
+            })
+            .then(function (resultado) {
+                if (!resultado.ok) {
+                    mensagem.textContent = ' ' + resultado.dados.erro;
+                    return;
+                }
+
+                var d = resultado.dados;
+                var rua = [d.logradouro, d.bairro, d.cidade].filter(Boolean).join(', ');
+                campoEndereco.value = rua + ' - ' + d.uf;
+                mensagem.textContent = ' Endereço preenchido.';
+            })
+            .catch(function () {
+                mensagem.textContent = ' Não foi possível buscar o CEP. Digite o endereço manualmente.';
+            });
+    });
+});
+</script>
+</body>
+</html>

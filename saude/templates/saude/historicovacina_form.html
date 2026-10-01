@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Vacina</title>
+</head>
+<body>
+    <h1>Vacina</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Salvar</button>
+        <a href="{% url 'saude:vacina_list' %}">Cancelar</a>
+    </form>
+</body>
+</html>

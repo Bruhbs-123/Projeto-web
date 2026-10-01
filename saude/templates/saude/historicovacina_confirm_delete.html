@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Excluir vacina</title>
+</head>
+<body>
+    <h1>Excluir vacina</h1>
+    <p>Tem certeza que deseja excluir "{{ object }}"?</p>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit">Sim, excluir</button>
+        <a href="{% url 'saude:vacina_list' %}">Cancelar</a>
+    </form>
+</body>
+</html>

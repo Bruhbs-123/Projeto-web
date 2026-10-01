@@ -1,6 +1,17 @@
-<h1>Excluir {{ object.nome }}?</h1>
-<form method="post">
-  {% csrf_token %}
-  <button type="submit">Confirmar</button>
-</form>
-<a href="{% url 'animal-list' %}">Cancelar</a>
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Excluir tutor</title>
+</head>
+<body>
+    <h1>Excluir {{ object.nome }}?</h1>
+
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit">Confirmar</button>
+    </form>
+
+    <a href="{% url 'tutor-list' %}">Cancelar</a>
+</body>
+</html>

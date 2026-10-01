@@ -1,12 +1,24 @@
-<h1>Tutores</h1>
-<a href="{% url 'tutor-create' %}">Novo tutor</a>
-<ul>
-{% for t in object_list %}
-  <li>{{ t }} -
-    <a href="{% url 'tutor-update' t.pk %}">editar</a> |
-    <a href="{% url 'tutor-delete' t.pk %}">excluir</a>
-  </li>
-{% empty %}
-  <li>Nenhum tutor cadastrado.</li>
-{% endfor %}
-</ul>
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Tutores</title>
+</head>
+<body>
+    <h1>Tutores</h1>
+
+    <a href="{% url 'tutor-create' %}">Novo tutor</a>
+
+    <ul>
+    {% for t in object_list %}
+        <li>
+            {{ t }} -
+            <a href="{% url 'tutor-update' t.pk %}">editar</a> |
+            <a href="{% url 'tutor-delete' t.pk %}">excluir</a>
+        </li>
+    {% empty %}
+        <li>Nenhum tutor cadastrado.</li>
+    {% endfor %}
+    </ul>
+</body>
+</html>

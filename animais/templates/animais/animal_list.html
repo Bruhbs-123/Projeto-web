@@ -1,10 +1,22 @@
-<h1>Animais</h1>
-<a href="{% url 'animal-create' %}">Novo animal</a>
-<ul>
-{% for a in object_list %}
-  <li>{{ a }} -
-    <a href="{% url 'animal-update' a.pk %}">editar</a> |
-    <a href="{% url 'animal-delete' a.pk %}">excluir</a>
-  </li>
-{% endfor %}
-</ul>
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Animais</title>
+</head>
+<body>
+    <h1>Animais</h1>
+
+    <a href="{% url 'animal-create' %}">Novo animal</a>
+
+    <ul>
+    {% for a in object_list %}
+        <li>
+            {{ a }} -
+            <a href="{% url 'animal-update' a.pk %}">editar</a> |
+            <a href="{% url 'animal-delete' a.pk %}">excluir</a>
+        </li>
+    {% endfor %}
+    </ul>
+</body>
+</html>

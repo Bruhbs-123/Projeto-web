@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Vacinas</title>
+</head>
+<body>
+    <h1>Histórico de vacinas</h1>
+    <a href="{% url 'saude:vacina_create' %}">Nova vacina</a>
+
+    <table border="1" cellpadding="6">
+        <tr>
+            <th>Animal</th>
+            <th>Vacina</th>
+            <th>Aplicação</th>
+            <th>Próxima dose</th>
+            <th>Ações</th>
+        </tr>
+        {% for v in vacinas %}
+        <tr>
+            <td>{{ v.animal.nome }}</td>
+            <td>{{ v.nome_vacina }}</td>
+            <td>{{ v.data_aplicacao|date:"d/m/Y" }}</td>
+            <td>{{ v.proxima_dose|date:"d/m/Y"|default:"-" }}</td>
+            <td>
+                <a href="{% url 'saude:vacina_update' v.pk %}">Editar</a>
+                <a href="{% url 'saude:vacina_delete' v.pk %}">Excluir</a>
+            </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="5">Nenhuma vacina cadastrada.</td></tr>
+        {% endfor %}
+    </table>
+</body>
+</html>

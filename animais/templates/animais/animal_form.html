@@ -1,7 +1,19 @@
-<h1>Animal</h1>
-<form method="post">
-  {% csrf_token %}
-  {{ form.as_p }}
-  <button type="submit">Salvar</button>
-</form>
-<a href="{% url 'animal-list' %}">Voltar</a>
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Animal</title>
+</head>
+<body>
+    <h1>Animal</h1>
+
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+
+        <button type="submit">Salvar</button>
+    </form>
+
+    <a href="{% url 'animal-list' %}">Voltar</a>
+</body>
+</html>

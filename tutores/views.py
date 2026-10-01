@@ -9,12 +9,12 @@ class TutorListView(ListView):
 
 class TutorCreateView(CreateView):
     model = Tutor
-    fields = "_all_"
+    fields = "__all__"
     success_url = reverse_lazy("tutor-list")
 
 class TutorUpdateView(UpdateView):
     model = Tutor
-    fields = "_all_"
+    fields = "__all__"
     success_url = reverse_lazy("tutor-list")
 
 class TutorDeleteView(DeleteView):
