@@ -15,5 +15,96 @@
     </form>
 
     <a href="{% url 'animal-list' %}">Voltar</a>
+    <script>
+document.addEventListener('DOMContentLoaded', function () {
+    var campoEspecie = document.getElementById('id_especie');
+    var campoRaca = document.getElementById('id_raca');
+    var campoFoto = document.getElementById('id_foto_url');
+
+    var seletor = document.createElement('select');
+    seletor.style.display = 'none';
+    campoRaca.insertAdjacentElement('afterend', seletor);
+
+    var mensagem = document.createElement('div');
+    seletor.insertAdjacentElement('afterend', mensagem);
+
+    function lerJson(resposta) {
+        return resposta.json().then(function (dados) {
+            return { ok: resposta.ok, dados: dados };
+        });
+    }
+
+    function carregarRacas() {
+        var especie = campoEspecie.value;
+        seletor.style.display = 'none';
+        seletor.innerHTML = '';
+        mensagem.textContent = '';
+
+        if (especie !== 'cachorro' && especie !== 'gato') {
+            return;
+        }
+
+        mensagem.textContent = 'Carregando raças...';
+
+        fetch('/animais/racas/' + especie + '/')
+            .then(lerJson)
+            .then(function (resultado) {
+                if (!resultado.ok) {
+                    mensagem.textContent = resultado.dados.erro + ' Digite a raça manualmente.';
+                    return;
+                }
+
+                var primeira = document.createElement('option');
+                primeira.value = '';
+                primeira.textContent = 'Escolha uma raça...';
+                seletor.appendChild(primeira);
+
+                resultado.dados.racas.forEach(function (raca) {
+                    var opcao = document.createElement('option');
+                    opcao.value = raca.id;
+                    opcao.textContent = raca.nome;
+                    seletor.appendChild(opcao);
+                });
+
+                seletor.style.display = 'inline';
+                mensagem.textContent = '';
+            })
+            .catch(function () {
+                mensagem.textContent = 'Não foi possível carregar as raças. Digite manualmente.';
+            });
+    }
+
+    seletor.addEventListener('change', function () {
+        if (seletor.value === '') {
+            return;
+        }
+
+        var nomeRaca = seletor.options[seletor.selectedIndex].textContent;
+        campoRaca.value = nomeRaca.slice(0, 50);
+        mensagem.textContent = 'Buscando foto...';
+
+        fetch('/animais/foto/' + campoEspecie.value + '/' + encodeURIComponent(seletor.value) + '/')
+            .then(lerJson)
+            .then(function (resultado) {
+                if (!resultado.ok) {
+                    mensagem.textContent = resultado.dados.erro + ' A raça foi preenchida, mas a foto não.';
+                    return;
+                }
+                if (resultado.dados.foto_url) {
+                    campoFoto.value = resultado.dados.foto_url;
+                    mensagem.textContent = 'Raça e foto preenchidas.';
+                } else {
+                    mensagem.textContent = resultado.dados.aviso;
+                }
+            })
+            .catch(function () {
+                mensagem.textContent = 'Não foi possível buscar a foto. A raça foi preenchida.';
+            });
+    });
+
+    campoEspecie.addEventListener('change', carregarRacas);
+    carregarRacas();
+});
+</script>
 </body>
 </html>

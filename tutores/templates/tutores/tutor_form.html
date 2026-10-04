@@ -45,9 +45,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     return;
                 }
 
-                var d = resultado.dados;
-                var rua = [d.logradouro, d.bairro, d.cidade].filter(Boolean).join(', ');
-                campoEndereco.value = rua + ' - ' + d.uf;
+                campoEndereco.value = resultado.dados.endereco;
                 mensagem.textContent = ' Endereço preenchido.';
             })
             .catch(function () {

@@ -9,4 +9,5 @@ urlpatterns = [
     path('vacinas/nova/', views.VacinaCreateView.as_view(), name='vacina_create'),
     path('vacinas/<int:pk>/editar/', views.VacinaUpdateView.as_view(), name='vacina_update'),
     path('vacinas/<int:pk>/excluir/', views.VacinaDeleteView.as_view(), name='vacina_delete'),
+    path('vacinas/pendentes/', views.vacinas_pendentes, name='vacinas_pendentes'),
 ]

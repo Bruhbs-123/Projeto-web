@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Adoções do mês</title>
+</head>
+<body>
+    <h1>Animais adotados em {{ mes }}/{{ ano }}</h1>
+
+    <form method="get">
+        <label for="mes">Mês:</label>
+        <input type="month" id="mes" name="mes" value="{{ mes_texto }}">
+        <button type="submit">Filtrar</button>
+    </form>
+
+    <p>Total de adoções no mês: <strong>{{ adotados|length }}</strong></p>
+
+    <table border="1" cellpadding="6">
+        <tr>
+            <th>Animal</th>
+            <th>Espécie</th>
+            <th>Raça</th>
+            <th>Tutor</th>
+            <th>Data da adoção</th>
+        </tr>
+        {% for a in adotados %}
+        <tr>
+            <td>{{ a.nome }}</td>
+            <td>{{ a.get_especie_display }}</td>
+            <td>{{ a.raca|default:"-" }}</td>
+            <td>{{ a.tutor|default:"-" }}</td>
+            <td>{{ a.data_adocao|date:"d/m/Y" }}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="5">Nenhuma adoção neste mês.</td></tr>
+        {% endfor %}
+    </table>
+
+    <a href="{% url 'animal-list' %}">Voltar</a>
+</body>
+</html>

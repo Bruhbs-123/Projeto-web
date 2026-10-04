@@ -129,3 +129,8 @@ MAILERS = {
         'BACKEND': 'django.core.mail.backends.console.EmailBackend',
     },
 }
+
+import os
+
+DOG_API_KEY = os.environ.get('DOG_API_KEY', '')
+CAT_API_KEY = os.environ.get('CAT_API_KEY', '')

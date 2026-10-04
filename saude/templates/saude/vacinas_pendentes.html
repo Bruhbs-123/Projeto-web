@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Vacinas pendentes</title>
+</head>
+<body>
+    <h1>Calendário de vacinas pendentes</h1>
+
+    {% regroup pendentes by proxima_dose|date:"m/Y" as meses %}
+
+    {% for mes in meses %}
+        <h2>{{ mes.grouper }}</h2>
+        <table border="1" cellpadding="6">
+            <tr>
+                <th>Data prevista</th>
+                <th>Animal</th>
+                <th>Vacina</th>
+                <th>Situação</th>
+            </tr>
+            {% for v in mes.list %}
+            <tr>
+                <td>{{ v.proxima_dose|date:"d/m/Y" }}</td>
+                <td>{{ v.animal.nome }}</td>
+                <td>{{ v.nome_vacina }}</td>
+                <td>
+                    {% if v.proxima_dose < hoje %}
+                        <strong>ATRASADA</strong>
+                    {% else %}
+                        Agendada
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+    {% empty %}
+        <p>Nenhuma vacina pendente.</p>
+    {% endfor %}
+
+    <a href="{% url 'saude:vacina_list' %}">Voltar</a>
+</body>
+</html>
