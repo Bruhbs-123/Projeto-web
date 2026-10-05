@@ -1,10 +1,18 @@
 Readme · MD
-# AdoteApp
- 
+<div align="center">
+
+# **Adote.anim**
+
+**Plataforma web para adoção e acompanhamento de animais**
+
 [![Status](https://img.shields.io/badge/status-em_desenvolvimento-yellow)]()
 [![Versão](https://img.shields.io/badge/versão-0.1.0-blue)]()
 [![Licença](https://img.shields.io/badge/licença-acadêmica-lightgrey)]()
- 
+
+</div>
+
+---
+
 **Instituição:** [CEUB]
 **Curso:** [ADS]
 **Disciplina:** Desenvolvimento Web
@@ -68,7 +76,7 @@ O problema que o projeto ataca é a dispersão de informações sobre animais pa
 | Relatório de vacinas pendentes | Calendário de vacinas a vencer | Planejada |
 | API REST própria | Endpoint público (`GET /api/animais`) para consumo por terceiros | Planejada |
 | Importação de dados de raça | Consumo da Dog API / Cat API ao cadastrar um animal | Planejada |
-| Identidade visual | Paleta, tipografia e logotipo aplicados de forma consistente | Planejada |
+| Identidade visual | Paleta, tipografia e logotipo aplicados de forma consistente | Em andamento |
  
 *Atualize a coluna “Status” (Implementada / Em andamento / Planejada) conforme o desenvolvimento avança.*
  
@@ -84,8 +92,6 @@ O problema que o projeto ataca é a dispersão de informações sobre animais pa
  
 *Inclua capturas de tela reais em `images/` assim que as telas estiverem prontas.*
  
-![Tela principal](images/[screenshot-principal].png)
- 
 | Tela | Descrição |
 | --- | --- |
 | Lista de animais | Catálogo de animais disponíveis, com filtros de busca |
@@ -93,7 +99,13 @@ O problema que o projeto ataca é a dispersão de informações sobre animais pa
 | Cadastro de tutor/abrigo | Formulário com endereço preenchido automaticamente via ViaCEP |
 | Painel de vacinas | Histórico e calendário de vacinas por animal |
  
-**Vídeo / protótipo:** [PREENCHER — link do protótipo (Figma) ou vídeo de demonstração]
+**Protótipo visual:** [Figma — Adote.anim](https://www.figma.com/design/AH6WseuknkiNPtpfBXwWO6)
+
+**Documentação da identidade visual:** [docs/prototipos/identidade-visual.md](docs/prototipos/identidade-visual.md)
+
+**Documentação dos wireframes:** [docs/prototipos/wireframes.md](docs/prototipos/wireframes.md)
+
+**Protótipos Desktop:** [docs/prototipos/desktop.md](docs/prototipos/desktop.md)
  
 ---
  
@@ -173,6 +185,7 @@ Documentação completa da API: [PREENCHER — link para Swagger/Redoc ou `docs/
 | `README.md` | Apresentação do projeto, objetivos, tecnologias e instruções de uso |
 | `.env.example` | Lista das variáveis necessárias, sem credenciais reais |
 | `docs/` | Artefatos de análise e modelagem |
+| `docs/prototipos/` | Identidade visual, wireframes e protótipos de telas |
 | `docs/planejamento/` | Cronograma e divisão de tarefas entre a equipe |
 | `docs/seguranca/` | Relatórios SAST e DAST |
 | `images/` | Figuras da documentação geral do repositório |
@@ -355,6 +368,10 @@ Este material destina-se a fins educacionais.
 - Modelo de dados (ER): [`docs/banco-de-dados/`](docs/banco-de-dados/)
 - Contrato da API: [`docs/api/`](docs/api/)
 - Cronograma de planejamento: [`docs/planejamento/cronograma.docx`](docs/planejamento/cronograma.docx)
+- Identidade visual: [`docs/prototipos/identidade-visual.md`](docs/prototipos/identidade-visual.md)
+- Wireframes: [`docs/prototipos/wireframes.md`](docs/prototipos/wireframes.md)
+- Protótipos Desktop: [`docs/prototipos/desktop.md`](docs/prototipos/desktop.md)
+  
 ### Referências
  
 - [PREENCHER — bibliografia consultada, documentação oficial das tecnologias usadas]
