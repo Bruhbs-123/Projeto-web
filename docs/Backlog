@@ -1,0 +1,54 @@
+# Backlog e planejamento — AdoteApp
+
+Prioridade: **A** obrigatório no enunciado · **B** importante · **C** desejável.
+Status: ✅ feito · 🔄 parcial · ⬜ pendente. Atualizado em 05/10/2026 a partir do código do repositório.
+
+## Marcos
+| Data | Marco | Situação |
+|---|---|---|
+| 28/09 | Fase 1 consolidada | Documentos entregues entre 23/09 e 04/10 |
+| 30/09 | API própria implementada | Concluída em 05/10 |
+| 01/10 | Integrações externas funcionando | ✅ (ViaCEP e Dog/Cat API no código desde 01–03/10) |
+| 02/10 | Deploy em produção | ⬜ pendente |
+| 03/10 | SAST | ✅ executado em 05/10 |
+| 04/10 | DAST e relatório de segurança | DAST ⬜ pendente (depende do deploy) |
+| 05/10 | Entrega e apresentação | em andamento |
+
+## Fase 1 (documentação)
+| ID | Tarefa | Resp. | Prio | Status |
+|---|---|---|---|---|
+| F1-01 | Repositório a partir do template, colaboradores, README | Rafael / Bruna | A | ✅ |
+| F1-02 | Documento de Visão | Bruna | A | ✅ |
+| F1-03 | Casos de uso (UML + texto) | Rafael / Bruna | A | ✅ |
+| F1-04 | Arquitetura (diagrama + texto) | Rafael / Bruna | A | ✅ `Arquitetura em Camadas.pdf` |
+| F1-05 | Modelo de dados (DER) | Rafael | A | ✅ (difere do código: ver checklist, item 18) |
+| F1-06 | Contrato inicial da API | Rafael / Ana Clara | A | ✅ agora em `docs/api/` |
+| F1-07 | Plano de integração externa | Renata | A | ✅ `docs/plano_integração.md` |
+| F1-08 | Identidade visual e protótipos | Isadora | A | ✅ |
+| F1-09 | Planejamento | Bruna | A | ✅ |
+
+## Fase 2 (implementação)
+| ID | Tarefa | Resp. | Prio | Status |
+|---|---|---|---|---|
+| F2-01 | Models e migrations | Ana Clara | A | ✅ (sem `Abrigo` e `Adoção` separados) |
+| F2-02 | CRUD de animais | Renata | A | ✅ |
+| F2-03 | CRUD de tutores e vacinas, validação de datas | Renata | A | ✅ (consultas sem telas 🔄) |
+| F2-04 | Autenticação e permissões | Ana Clara | A | 🔄 login pelo `/admin/`; escrita exige login; sem cadastro público |
+| F2-05 | Busca combinada | Ana Clara / Renata | A | ✅ |
+| F2-06 | Relatório de adoções do mês (imprimível) | Renata | A | ✅ |
+| F2-07 | Calendário de vacinas pendentes | Renata | A | ✅ |
+| F2-08 | `GET /api/animais` e `/{id}` com DRF, paginação, filtros | Ana Clara | A | ✅ |
+| F2-09 | Escrita da API restrita; limite de requisições | Ana Clara | A | ✅ |
+| F2-10 | Documentação da API (Swagger/Redoc) | Bruna | A | ✅ |
+| F2-11 | Integração ViaCEP | Renata | A | ✅ |
+| F2-12 | Integração Dog/Cat API | Renata | A | ✅ |
+| F2-13 | Tratamento de erros, timeout e limites | Rafael / Renata | A | ✅ |
+| F2-14 | Templates, CSS e responsividade | Isadora | A | ⬜ telas sem CSS |
+| F2-15 | Testes automatizados + roteiro manual | Bruna / Renata | A | ✅ 52 automatizados; roteiro manual a executar |
+| F2-16 | Deploy: HTTPS, DEBUG=False, ALLOWED_HOSTS, variáveis | Rafael / Ana Clara | A | 🔄 código pronto; **publicação pendente** |
+| F2-17 | SAST e correções | Rafael / Ana Clara | A | ✅ |
+| F2-18 | DAST e correções | Rafael / Ana Clara | A | ⬜ |
+| F2-19 | Relatório de segurança | Bruna | A | 🔄 falta o DAST |
+| F2-20 | README final, tag/commit de entrega, quadro de submissão | Bruna | A | 🔄 |
+| F2-21 | Apresentação ensaiada | Todos | A | ⬜ |
+
