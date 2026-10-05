@@ -1,0 +1,120 @@
+# Roteiro e resultados de testes — adote.anim
+
+**Responsável:** Bruna · **Data:** 05/10/2026 · **Ambiente:** local (Python 3.12, Django 6.1.1, `DEBUG=True`, SQLite) · **Commit testado:** `0666823` + correções do pacote `codigo.patch` (hash final: o do commit do push de 05/10)
+
+**Legenda:** ✅ passou · ❌ falhou · 🔎 a conferir em aparelho/navegador real (ver "Pendências de conferência")
+
+## Como cada caso foi verificado
+Cada caso tem **evidência** de pelo menos um destes tipos, indicados na coluna **Evid.**:
+
+| Tipo | Significado | Onde está |
+|---|---|---|
+| **T** | Teste automatizado com o ID do caso (`CTxx`, `APIxx`, `RSxx`), executado pelo cliente HTTP do Django, como o usuário faria. As APIs externas são simuladas (`mock`) | `animais/tests_roteiro.py` · [saída por caso](evidencias/roteiro-por-caso.txt) |
+| **P** | Captura de tela do teste manual feito pela Renata, no navegador, com a aplicação local | pasta [`fotos_testes/`](../../fotos_testes/) |
+| **N** | Coleção do Postman executada com o Newman: 15 requisições, 24 verificações, 0 falhas | [saída](evidencias/postman-newman-local.txt) |
+
+> As capturas **P** foram tiradas antes da aplicação do layout com a identidade visual. O comportamento (JavaScript e regras) não mudou, e os testes **T** foram executados depois da mudança.
+
+## 0. Testes automatizados
+```bash
+python manage.py test -v 2
+```
+**Resultado em 05/10/2026:** 94 testes, 0 falhas ([saída completa](evidencias/testes-automatizados.txt)). Antes das correções eram 38. Desses 94, 36 são os casos deste roteiro (`tests_roteiro.py`).
+
+## 1. Cadastro de animais
+| ID | Cenário | Passos | Resultado esperado | Evid. | Res. |
+|---|---|---|---|---|---|
+| CT01 | Cadastro válido | Logada, `/animais/novo/`, preencher e salvar | Animal criado e aparece na lista | T · P: [cachorro](../../fotos_testes/cachorro_adicionado.PNG), [gato](../../fotos_testes/gato_adicionado.PNG), [outro](../../fotos_testes/Outro_adicionado.PNG) | ✅ |
+| CT02 | Campos obrigatórios vazios | Enviar formulário vazio | Erros por campo; nada é salvo | T | ✅ |
+| CT03 | Listagem | Abrir `/animais/` | Lista com nome, porte, idade e CEP | T · P | ✅ |
+| CT04 | Edição | Editar o nome e salvar | Alteração refletida | T | ✅ |
+| CT05 | Exclusão | Excluir com confirmação; "Cancelar" volta para `/animais/` | Animal some da lista; cancelar não exclui | T | ✅ |
+| CT06 | Importar raça/foto | Escolher espécie e raça no formulário | Raça e foto preenchidas | T · P: [raças (cachorro)](../../fotos_testes/Json%20ra%C3%A7as%20cachorro.PNG), [raças (gato)](../../fotos_testes/Json%20ra%C3%A7as%20gato.PNG), [foto do cachorro](../../fotos_testes/foto_automatica.PNG), [foto do gato](../../fotos_testes/foto_url_preenchida_gato.PNG) | ✅ |
+| CT07 | Dog/Cat API indisponível ou espécie sem API | Sem internet, chave inválida ou espécie "outro" | Mensagem clara; cadastro manual continua | T · P: [espécie sem API](../../fotos_testes/n%C3%A3o%20existe%20essa%20especie.PNG), [cadastro manual de "outro"](../../fotos_testes/Outro_adicionado.PNG) | ✅ |
+| CT08 | Acesso sem login | Deslogada, abrir `/animais/novo/` e tentar excluir | Redireciona ao login; nada é excluído | T | ✅ |
+
+## 2. Vacinas
+Regras do sistema: a data de aplicação não pode ser futura; a próxima dose deve ser depois da aplicação.
+
+| ID | Cenário | Resultado esperado | Evid. | Res. |
+|---|---|---|---|---|
+| CT09 | Registrar vacina válida (aplicação hoje, próxima dose futura) | Salva e aparece em `/saude/vacinas/` | T · P: [vacina válida](../../fotos_testes/vacina_v%C3%A1lida.PNG) | ✅ |
+| CT10 | Aplicação com data futura | Erro "não pode ser futura" | T · P: [data futura](../../fotos_testes/Data_futura.PNG) | ✅ |
+| CT11 | Próxima dose igual ou anterior à aplicação; próxima dose vazia é aceita | Erro "depois da aplicação"; vazia salva | T · P: [dose igual](../../fotos_testes/Data_igual_aplica%C3%A7%C3%A3o.PNG), [dose vazia](../../fotos_testes/Data_proximadose_nula2.PNG) | ✅ |
+| CT12 | Editar e excluir vacina | Mudanças refletidas | T · P: [editar](../../fotos_testes/editar3.PNG), [excluir](../../fotos_testes/excluir3.PNG) | ✅ |
+| CT13 | Calendário `/saude/vacinas/pendentes/` | Pendentes e atrasadas por mês; dose já cumprida por aplicação posterior não aparece | T | ✅ |
+| CT14 | Imprimir o calendário e o relatório | Botão "Imprimir / salvar em PDF" presente; folha de impressão sem menu | T (botão e CSS de impressão) | 🔎 |
+
+## 3. Tutores e CEP
+| ID | Cenário | Resultado esperado | Evid. | Res. |
+|---|---|---|---|---|
+| CT15 | CEP válido (ex.: 01001-000) ao sair do campo | Endereço preenchido automaticamente | T · P: [formulário](../../fotos_testes/cep_v%C3%A1lido1.PNG), [com hífen](../../fotos_testes/cep_comtra%C3%A7o.PNG), [endpoint](../../fotos_testes/Cep_v%C3%A1lido.PNG) | ✅ |
+| CT16 | CEP inválido (`123`) | "CEP deve ter 8 dígitos."; a ViaCEP não é chamada; digitação manual possível | T · P: [formulário](../../fotos_testes/cep_invalido2.PNG), [endpoint](../../fotos_testes/cep_invalido.PNG) | ✅ |
+| CT17 | CEP inexistente (`99999-999`) | "CEP não encontrado." | T · P: [formulário](../../fotos_testes/cep_invalido1.PNG), [endpoint](../../fotos_testes/cep_inexistente.PNG) | ✅ |
+| CT18 | ViaCEP fora do ar | Mensagem amigável; digitação manual possível | T | ✅ |
+| CT19 | Cadastro, edição e exclusão de tutor; e-mail inválido ou repetido é rejeitado | Funcionam e a lista atualiza | T · P: [editar](../../fotos_testes/editar_tutor1.PNG), [excluir](../../fotos_testes/excluir_tutor3.PNG), [e-mail inválido](../../fotos_testes/email_invalido.PNG) | ✅ |
+| CT20 | Lista de tutores deslogada | Redireciona ao login (protege e-mail e telefone) | T | ✅ |
+
+## 4. Busca, adoção e relatório
+| ID | Cenário | Resultado esperado | Evid. | Res. |
+|---|---|---|---|---|
+| CT21 | Buscar por espécie | Só a espécie escolhida | T | ✅ |
+| CT22 | Buscar por porte e idade | Respeita os dois filtros | T | ✅ |
+| CT23 | Buscar por CEP (com e sem hífen) | Animais daquele CEP | T | ✅ |
+| CT24 | Busca combinada | Todos os filtros juntos | T | ✅ |
+| CT25 | Busca sem resultado; filtro inválido | "Nenhum animal encontrado."; aviso de erro sem quebrar a tela | T | ✅ |
+| CT26 | Registrar adoção (editar animal: tutor, data, desmarcar disponível) | Animal sai da API pública (lista e detalhe 404) | T | ✅ |
+| CT27 | Relatório `/animais/relatorio/adocoes/` | Só adoções do mês escolhido; botão de imprimir | T | ✅ |
+
+## 5. API
+Executado com a [coleção do Postman](../api/adote-anim.postman_collection.json) contra a aplicação local. Para repetir na URL publicada, defina `base_url` na coleção.
+
+| ID | Requisição | Resultado esperado | Evid. | Res. |
+|---|---|---|---|---|
+| API01 | `GET /api/animais` | 200, JSON paginado | N | ✅ |
+| API02 | `GET /api/animais?especie=cachorro&porte=P` | 200, só cães de porte P | N · T | ✅ |
+| API03 | `GET /api/animais?cep=70040010` | 200, só desse CEP | N · T | ✅ |
+| API04 | `GET /api/animais?cep=abc` | 400 com erro no campo `cep` | N · T | ✅ |
+| API05 | `GET /api/animais/{id}` | 200 (se disponível) | N · T | ✅ |
+| API06 | `GET /api/animais/999999` | 404 | N · T | ✅ |
+| API07 | `POST /api/animais` sem login | 403 (ou 401) | N · T | ✅ |
+| API08 | `DELETE /api/animais/{id}` sem login | 403 (ou 401) | N · T | ✅ |
+| API09 | POST autenticado válido | 201 | N · T | ✅ |
+| API10 | POST autenticado com `idade` negativa | 400 | N · T | ✅ |
+| API11 | `?page=2` com mais de 20 animais | `next` e `previous` coerentes | T | ✅ |
+| API12 | Resposta pública sem dados de tutor | Sem e-mail, telefone, nome ou endereço de tutor | N · T | ✅ |
+
+## 6. Responsividade
+| ID | Cenário | Evid. | Res. |
+|---|---|---|---|
+| RS01 | Telas em largura de celular (~375 px) usáveis, sem rolagem horizontal | T (viewport, regras `@media` e tabelas com rolagem própria); falta ver em aparelho | 🔎 |
+| RS02 | Relatórios legíveis ao imprimir | T (CSS `@media print`); falta ver a pré-visualização | 🔎 |
+
+## Resumo
+| | Total | ✅ | 🔎 | ❌ |
+|---|---|---|---|---|
+| Cadastro de animais | 8 | 8 | 0 | 0 |
+| Vacinas | 6 | 5 | 1 | 0 |
+| Tutores e CEP | 6 | 6 | 0 | 0 |
+| Busca, adoção e relatório | 7 | 7 | 0 | 0 |
+| API | 12 | 12 | 0 | 0 |
+| Responsividade | 2 | 0 | 2 | 0 |
+| **Total** | **41** | **38** | **3** | **0** |
+
+## Pendências de conferência (2 minutos, no navegador)
+1. **CT14 e RS02:** abrir `/saude/vacinas/pendentes/` (ou o relatório), clicar em "Imprimir / salvar em PDF" e confirmar que a pré-visualização não mostra o menu nem os botões.
+2. **RS01:** abrir `/animais/` no celular, ou no navegador com F12 e o modo celular (375 px), e confirmar que não há rolagem horizontal da página.
+3. Aproveite e confirme **no console (F12)** que não há erros de política de segurança (CSP) nas telas de animal e de tutor.
+
+Quando conferir, troque 🔎 por ✅ nas três linhas e o total fica 41 de 41.
+
+## Defeitos encontrados
+| # | Descrição | Severidade | Responsável | Status |
+|---|---|---|---|---|
+| 1 | O "Cancelar" da tela de excluir animal levava à lista de tutores, e o título dizia "Excluir tutor" | Baixa | Bruna | **Corrigido** (CT05) |
+| 2 | Telas sem a identidade visual | Média | Isadora | **Corrigido** (layout, CSS e logotipo aplicados) |
+| 3 | Escrita, lista de tutores e relatório de adoções abertos, sem login | Alta | Ana Clara | **Corrigido** (CT08, CT20) |
+| 4 | Páginas "Home", "Sobre" e "Como funciona" dos protótipos não existem no Django | Baixa | Isadora | Aberto (próximos passos) |
+| 5 | `Consulta` sem telas (só no `/admin/`) | Baixa | Ana Clara | Aberto (próximos passos) |
+| 6 | Foto de animal de domínio fora da Dog/Cat API não carrega (política de segurança) | Baixa | — | Aceito: mostra um ícone no lugar |
+| 7 | **Capturas em `fotos_testes/` expõem dados sensíveis:** `cat_api.PNG`, `dog_api.PNG` e `dog_api_imagens.PNG` mostram o início da chave `x-api-key`; `editar_tutor1.PNG` e outras mostram e-mail e telefone de uma integrante | **Média** | Renata / Bruna | **Aberto:** gerar chave nova nas duas APIs, apagar ou recortar essas imagens e remover do histórico se possível |
