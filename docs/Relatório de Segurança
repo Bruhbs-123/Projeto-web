@@ -1,0 +1,214 @@
+# Relatório de Segurança e Integrações — AdoteApp
+
+**Consolidação:** Bruna · **Data:** 05/10/2026
+**Base analisada:** commit `0666823` (branch `main`) **+ correções do pacote `codigo.patch`** · **Commit final com as correções:** `[hash após o push]`
+
+> **Como este relatório foi produzido.** As análises SAST e DAST abaixo foram **executadas de verdade** em 05/10/2026, em um ambiente de preparação, **com apoio de IA (Claude)**, a pedido da Bruna. Todos os relatórios brutos estão em [`evidencias/`](evidencias/) e os comandos são reproduzíveis. O DAST foi feito contra uma **instância local** do app (ver limitações em 2.3); a repetição contra a **URL publicada** está pendente e marcada. A declaração de uso de IA do grupo (README, seção 12) deve mencionar isso.
+
+## Resumo
+
+| | Antes | Depois | Observação |
+|---|---|---|---|
+| SAST — Bandit | 1 baixa | **0** | Chave fixa no código |
+| SAST — pip-audit | 0 | **0** | Nenhuma vulnerabilidade conhecida |
+| `check --deploy` | 1 erro + 7 avisos | **1 aviso** | `W021` (HSTS preload), risco aceito |
+| DAST — OWASP ZAP | 0 alto · 2 médios · 2 baixos | **0 alto · 2 médios\* · 1 baixo\*** | \*Todos restantes são do Swagger (`/api/docs/`), risco aceito |
+| Testes automatizados | 38 | **58** | Inclui testes dos cabeçalhos de segurança |
+| Revisão manual | 5 problemas sérios | **4 corrigidos, 1 pendente** | Pendente: remover `db.sqlite3` do Git |
+
+---
+
+## Parte 1 — Integrações externas
+
+### 1.1 ViaCEP
+**Documentação consultada:** https://viacep.com.br
+
+**Como usamos.** No formulário de tutor, ao sair do campo CEP o navegador chama o endpoint interno `GET /tutores/cep/{cep}/`, que consulta a ViaCEP e devolve o endereço (logradouro, bairro, cidade, UF) em um texto. O campo de endereço é preenchido e o valor é salvo com o tutor. Código: `buscar_endereco()` em `tutores/services.py`.
+
+**Endpoint externo:** `GET https://viacep.com.br/ws/{cep}/json/`. Não exige chave. Dados aproveitados: `logradouro`, `bairro`, `localidade`, `uf`.
+
+| Situação | Comportamento (conforme o código e os testes automatizados) |
+|---|---|
+| CEP com formato inválido (≠ 8 dígitos) | Barrado antes de chamar a API: `400` "CEP deve ter 8 dígitos." |
+| CEP inexistente (API responde `erro`) | `400` "CEP não encontrado." |
+| Timeout (5 s) | `400` "A ViaCEP demorou demais para responder." |
+| Falha de conexão, status HTTP de erro ou JSON inválido | `400` "Não foi possível consultar a ViaCEP." |
+
+Na tela, qualquer erro mostra a mensagem e o endereço pode ser digitado manualmente. Timeout: **5 s**. Cache: **não há**.
+
+**Benefício ao usuário:** menos digitação e endereços padronizados no cadastro de tutores.
+
+### 1.2 The Dog API / The Cat API
+**Documentação consultada:** https://www.thedogapi.com e https://www.thecatapi.com (mesmo padrão).
+
+**Como usamos.** No formulário de animal, ao escolher a espécie (cachorro ou gato) o navegador chama `GET /animais/racas/{especie}/`, que lista as raças da API correspondente. Ao escolher a raça, `GET /animais/foto/{especie}/{raca_id}/` busca uma foto de referência; raça e URL da foto são preenchidas e salvas no animal. A foto aparece na tela de animais e na API pública (`foto_url`). Código: `animais/services.py`.
+
+| Item | Detalhe |
+|---|---|
+| URLs-base | `https://api.thedogapi.com/v1` e `https://api.thecatapi.com/v1` |
+| Endpoints | `GET /breeds` e `GET /images/search?breed_ids={id}` |
+| Dados aproveitados | `id` e `name` da raça; `url` da foto |
+| Autenticação | Cabeçalho `x-api-key`, lido das variáveis `DOG_API_KEY` e `CAT_API_KEY` (nunca no repositório). Sem chave, a chamada segue sem o cabeçalho |
+| Timeout | 5 s em toda chamada |
+| Cache | Não há |
+
+| Situação | Comportamento |
+|---|---|
+| Timeout | `ErroAPI` "A API demorou demais para responder." |
+| Falha de conexão | "Não foi possível conectar à API." |
+| 401 (chave ausente/inválida) | "Chave da API inválida ou ausente." |
+| 429 (limite) | "Limite de requisições da API atingido. Tente mais tarde." |
+| Outro status ≠ 200 | "A API retornou o erro {código}." |
+| JSON inválido ou formato inesperado | "Resposta inesperada da API."; itens sem `id`/`name` são ignorados |
+| Espécie sem API (ex.: "outro") | "Não há API de raças para essa espécie." |
+| Raça sem foto | Resposta com aviso; o formulário segue sem foto |
+
+As views devolvem o erro em JSON (`400`) e a tela mostra a mensagem, mantendo o cadastro manual possível.
+
+**Benefício ao usuário:** a ONG escolhe a raça em uma lista padronizada e ganha uma foto de referência, sem digitar nem procurar.
+
+**Limitações conhecidas.**
+- A busca por CEP da lista de animais compara o CEP informado no cadastro do animal; **não** usa o endereço vindo da ViaCEP. A ViaCEP alimenta o cadastro de tutores.
+- Por causa da política de segurança de conteúdo (CSP, achado D1), as fotos só carregam dos CDNs da Dog/Cat API (`cdn2.thedogapi.com`, `cdn2.thecatapi.com`). Uma foto digitada à mão de outro domínio não aparece e a tela mostra um ícone no lugar.
+
+---
+
+## Parte 2 — Análises de segurança
+
+### 2.1 Escopo e autorização
+- **SAST:** código do repositório (`adote_app`, `animais`, `saude`, `tutores`), excluindo `migrations` e `tests.py`, e as dependências do `requirements.txt`.
+- **DAST:** aplicação do próprio grupo, em instância local (`http://127.0.0.1:8771`), com dados fictícios. A repetição na URL publicada `https://[URL-DA-APLICACAO]` está pendente (2.3).
+- **Fora de escopo:** ViaCEP, Dog API e Cat API **não** foram alvo de nenhum teste. Nenhum sistema de terceiros foi testado.
+
+### 2.2 SAST (análise estática)
+
+| Item | Valor |
+|---|---|
+| Ferramentas e versões | Bandit 1.9.4 · pip-audit 2.10.1 · `manage.py check --deploy` (Django 6.1.1) |
+| Data | 05/10/2026 |
+| Alvo | Inicial: código de `main` (`0666823`). Final: `main` + `codigo.patch` |
+| Executado por | Ambiente de preparação com apoio de IA; **repetir localmente** com os comandos abaixo |
+| Não executado | Semgrep (precisa baixar regras da internet; indisponível no ambiente) |
+
+```bash
+bandit -r adote_app animais saude tutores -x '*/migrations,*/tests.py' -f json -o bandit-final.json
+pip-audit -r requirements.txt
+python manage.py check --deploy      # com DEBUG=False, SECRET_KEY e ALLOWED_HOSTS definidos
+```
+
+**Resultados**
+
+| Ferramenta | Inicial (alta/média/baixa) | Final | Observação |
+|---|---|---|---|
+| Bandit | 0 / 0 / 1 | **0 / 0 / 0** | B105: `SECRET_KEY` escrita no código |
+| pip-audit | 0 / 0 / 0 | **0 / 0 / 0** | "No known vulnerabilities found" (inclui as dependências novas) |
+| `check --deploy` | 1 erro + 7 avisos (`mail.E001`, `W004`, `W008`, `W009`, `W012`, `W016`, `W018`, `W020`) | **1 aviso** (`W021`) | Ver riscos aceitos (2.6) |
+
+**Interpretação.** O Bandit achou pouco, porque o código é pequeno e usa o ORM. Os problemas mais sérios apareceram na **revisão manual** e no DAST:
+
+| ID | Achado | Severidade | Decisão | Status |
+|---|---|---|---|---|
+| S1 | `SECRET_KEY` do Django no código e no histórico do Git | Média | Ler de variável de ambiente; o app não inicia sem ela em produção | Corrigido no código. **A chave antiga continua no histórico:** nunca usá-la em produção |
+| S2 | `DEBUG = True` e `ALLOWED_HOSTS = []` fixos | Alta em produção | Controlar por variável de ambiente, padrão seguro (`DEBUG=False`) | Corrigido |
+| S3 | Telas de criar, editar e excluir (animais, tutores, vacinas) sem login | Alta | Exigir login (`LoginRequiredMixin`) | Corrigido |
+| S4 | Lista de tutores e relatório de adoções expunham nome, e-mail e telefone sem login | Alta (dados pessoais) | Exigir login | Corrigido |
+| S5 | `db.sqlite3` versionado, com e-mail e telefone reais de uma integrante | Média (dados pessoais) | `git rm --cached db.sqlite3`, `.gitignore` e dados fictícios | **Pendente: ação manual no repositório** |
+| S6 | Endpoints auxiliares (`/tutores/cep/`, `/animais/racas/`, `/animais/foto/`) públicos e sem limite próprio | Baixa | Risco aceito (2.6) | Aceito |
+| S7 | API REST prevista, mas inexistente no código | Funcional | Implementada: leitura pública, escrita autenticada, paginação, limite de requisições | Corrigido |
+
+### 2.3 DAST (análise dinâmica)
+
+| Item | Valor |
+|---|---|
+| Ferramenta e versão | OWASP ZAP 2.16.1 (Automation Framework) |
+| Alvo | Instância local `http://127.0.0.1:8771`, gunicorn com `DEBUG=False` e SQLite fictício |
+| Data e duração | 05/10/2026 · 3 execuções de cerca de 3 minutos cada |
+| Tipo de varredura | Spider (até 2 min) + passiva + **ativa** (limitada a 5 min, 1 min por regra) |
+| Requisições | Cerca de 5.200 na primeira execução |
+| Configuração | [`zap-plano-automacao.yaml`](evidencias/zap-plano-automacao.yaml) |
+| Relatórios brutos | `evidencias/zap-inicial.*`, `zap-intermediaria.*`, `zap-final.*` (HTML e JSON) |
+
+**Rodadas.** A primeira rodou sobre o código **já com as correções S1–S7** em modo produção (não sobre a versão original, que só roda em modo de desenvolvimento). Depois de cada rodada, os achados foram corrigidos e a varredura repetida.
+
+| Risco | 1ª (inicial) | 2ª (intermediária) | 3ª (final) |
+|---|---|---|---|
+| Alto | 0 | 0 | **0** |
+| Médio | 2 | 4 | **2** |
+| Baixo | 2 | 1 | **1** |
+| Informativo | 5 | 5 | 5 |
+
+A 2ª rodada mostra que a correção do D1 **introduziu** alertas novos (curinga em `img-src`, falta de `form-action` na política do Swagger); eles foram corrigidos e sumiram na 3ª.
+
+**Achados e tratamento**
+
+| ID | Achado (ZAP) | Risco | Inst. | Falso positivo? | Decisão | Status |
+|---|---|---|---|---|---|---|
+| D1 | Content Security Policy (CSP) Header Not Set | Médio | 16 | Não | CSP nativa do Django 6 com *nonce*; removidos JavaScript e estilo inline das telas; `img-src` só do próprio site e dos CDNs da Dog/Cat API | **Corrigido** (sumiu na 3ª) |
+| D2 | Cross-Domain Misconfiguration (`Access-Control-Allow-Origin: *` em arquivos estáticos) | Médio | 10 | Não (baixo impacto: só arquivos públicos) | `WHITENOISE_ALLOW_ALL_ORIGINS = False` | **Corrigido** |
+| D3 | Cookie No HttpOnly Flag (`csrftoken`) | Baixo | 5 | Não | `CSRF_COOKIE_HTTPONLY = True` (as telas não leem o cookie por JavaScript) | **Corrigido** |
+| D4 | Cross-Domain JavaScript Source File Inclusion (Swagger via jsDelivr, `@latest`, sem SRI) | Baixo | 2 | Não | Risco aceito (2.6) | Aceito |
+| D5 | CSP: `script-src` com `unsafe-inline` | Médio | 1 | Parcial: só em `/api/docs/` | Risco aceito (2.6) | Aceito |
+| D6 | CSP: `style-src` com `unsafe-inline` | Médio | 1 | Parcial: só em `/api/docs/` | Risco aceito (2.6) | Aceito |
+| D7 | User Controllable HTML Element Attribute (Potential XSS) | Informativo | 8 | **Sim:** parâmetro `next` do login; o Django escapa a saída | Nenhuma | Falso positivo |
+| D8 | Authentication Request / Session Management Response Identified / Modern Web Application | Informativo | — | — | Apenas informativos | — |
+
+**O que a varredura ativa não encontrou:** nenhuma injeção, XSS refletido ou vulnerabilidade de severidade alta. Durante a varredura, o limite de requisições da API respondeu `429` 231 vezes e as escritas sem login responderam `403` (1.090 respostas), o que mostra os controles funcionando.
+
+**Limitações deste DAST (declaradas):**
+- Foi contra uma **instância local**, atrás de um *wrapper* que simula o terminador HTTPS do provedor ([`zap-proxy-https-local.py`](evidencias/zap-proxy-https-local.py)). **TLS, certificado e cabeçalhos adicionados pela hospedagem não foram avaliados.**
+- A varredura foi **sem login**: as telas de escrita foram alcançadas só até o redirecionamento ao login. A API com autenticação foi testada à parte (Postman e testes automatizados), não pelo ZAP.
+- A CSP foi validada pelo ZAP e por testes, **mas não num navegador real**. Abrir as telas com o console aberto (F12) e conferir que não há erros de CSP é o teste que falta.
+
+**Repetição na URL publicada (pendente).**
+
+```bash
+docker run --rm -v "$(pwd)":/zap/wrk/:rw -t ghcr.io/zaproxy/zaproxy:stable \
+  zap-baseline.py -t https://[URL-DA-APLICACAO] -r zap-publicado.html -J zap-publicado.json
+```
+Salvar os relatórios em `docs/seguranca/evidencias/` e registrar aqui: data `[ ]`, alto `[ ]`, médio `[ ]`, baixo `[ ]`. Sem Docker, use o ZAP desktop (*Automated Scan*) no mesmo alvo.
+
+### 2.4 Correções
+
+| Achado | O que foi feito | Onde |
+|---|---|---|
+| S1, S2 | Configuração por variáveis de ambiente (`SECRET_KEY`, `DEBUG`, `ALLOWED_HOSTS`, `CSRF_TRUSTED_ORIGINS`, `DATABASE_URL`); sem `SECRET_KEY` fora do modo de desenvolvimento o app não sobe | `adote_app/settings.py`, `.env.example` |
+| `W004`, `W008`, `W012`, `W016`, `W018`, `W020` | Com `DEBUG=False`: redirecionamento para HTTPS, HSTS de 1 ano, cookies `Secure`, nosniff, `X-Frame-Options: DENY`, hosts restritos | `adote_app/settings.py` |
+| `W009`, `mail.E001` | Chave forte vinda do ambiente; bloco `MAILERS` inválido removido | `adote_app/settings.py` |
+| S3, S4 | `LoginRequiredMixin` nas views de escrita e na lista de tutores; `@login_required` no relatório de adoções | `animais/views.py`, `tutores/views.py`, `saude/views.py` |
+| S7 | `AnimalViewSet` (DRF), `IsAuthenticatedOrReadOnly`, paginação, limite de 100/h anônimo, validação dos filtros, Swagger e Redoc | `animais/api.py`, `animais/serializers.py`, `adote_app/urls.py` |
+| D1 | CSP com *nonce*; política própria mais branda só para Swagger/Redoc; JavaScript e estilos inline movidos para arquivo e classes CSS | `adote_app/settings.py`, `adote_app/urls.py`, `templates/base.html`, `static/css/adote.css` |
+| D2, D3 | `WHITENOISE_ALLOW_ALL_ORIGINS = False`; `CSRF_COOKIE_HTTPONLY = True` | `adote_app/settings.py` |
+| Qualidade | 20 testes novos (API, filtros, controle de acesso, cabeçalhos de segurança); total 58, todos passando | `animais/tests.py` |
+
+**Commit(s):** `[hash após o push]`
+
+### 2.5 Nova verificação
+
+| Ferramenta | Antes | Depois | Evidência |
+|---|---|---|---|
+| Bandit | 0 / 0 / 1 | 0 / 0 / 0 | `bandit-inicial.*` → `bandit-final.*` |
+| pip-audit | 0 / 0 / 0 | 0 / 0 / 0 | `pip-audit-*.txt` |
+| `check --deploy` | 1 erro + 7 avisos | 1 aviso | `check-deploy-*.txt` |
+| ZAP (local) | 0 alto · 2 médios · 2 baixos | 0 alto · 2 médios · 1 baixo | `zap-inicial.*` → `zap-final.*` |
+| ZAP (URL publicada) | — | `[PENDENTE]` | — |
+| Testes automatizados | 38 passando | 58 passando | `testes-inicial.txt` → `testes-automatizados.txt` |
+
+### 2.6 Riscos aceitos
+
+| Achado | Por que não foi corrigido | Mitigação |
+|---|---|---|
+| D4, D5, D6 (Swagger/Redoc) | O Swagger UI carrega de uma CDN e usa script/estilo inline; uma CSP estrita o quebraria | Política mais branda **só** nas rotas `/api/docs/` e `/api/redoc/`; o restante do site não usa `unsafe-inline`. Próximo passo: hospedar os arquivos do Swagger no próprio site (`drf-spectacular-sidecar`) e fixar a versão |
+| `W021` (HSTS preload) | A lista de preload é opt-in e difícil de reverter; não se aplica a subdomínio de hospedagem gratuita | HSTS de 1 ano ativo |
+| S6 (endpoints auxiliares públicos) | Usados pelos formulários; sem dados pessoais | Timeout de 5 s; erros tratados; uso restrito por validação de parâmetros |
+| Login pelo `/admin/login/` | Não há cadastro público; contas são criadas por administradores | Senhas com hash e validadores do Django |
+| Fotos só dos CDNs da Dog/Cat API | Consequência da CSP restritiva | Ícone de fallback na tela |
+
+### 2.7 Configuração de produção
+
+☑ `DEBUG=False` por variável de ambiente · ☑ `ALLOWED_HOSTS` e `CSRF_TRUSTED_ORIGINS` restritivos · ☑ `SECRET_KEY` e chaves de API só no ambiente · ☑ cookies de sessão e CSRF `Secure` e `HttpOnly` · ☑ HSTS, nosniff, `X-Frame-Options`, CSP · ☑ escrita da API exige autenticação · ☑ limite de requisições na API pública · ☑ `check --deploy` sem erros · ☑ SAST e DAST local executados
+☐ Publicação com HTTPS na URL final · ☐ DAST repetido na URL publicada · ☐ `db.sqlite3` removido do Git (S5) · ☐ CSP conferida no navegador (F12)
+
+### 2.8 Conclusão
+Antes das correções, a aplicação não estava pronta para a internet: tinha telas de escrita abertas, dados pessoais expostos e configuração de desenvolvimento (S1 a S5). O SAST automático achou só 1 item baixo, e o que mais pesou veio da **revisão manual**. O DAST local, depois das correções, não encontrou nenhuma vulnerabilidade alta nem injeção; os três achados reais (D1 a D3) foram corrigidos e confirmados por nova varredura, e sobraram só os itens do Swagger, aceitos e isolados. Uma correção (a CSP) criou novos alertas na rodada seguinte, o que reforça a importância de repetir o teste depois de corrigir.
+
+Ficam pendentes: publicar com HTTPS, repetir o DAST na URL pública, conferir a CSP no navegador e tirar o `db.sqlite3` (com dados pessoais reais) do Git. A principal lição do grupo: segurança não é só rodar ferramenta; é revisar o código, corrigir, e **verificar de novo**.
