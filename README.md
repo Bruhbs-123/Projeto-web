@@ -68,17 +68,16 @@ O problema que o projeto ataca é a dispersão de informações sobre animais pa
  
 | Funcionalidade | Descrição | Status |
 | --- | --- | --- |
-| Cadastro de animais | Criação, edição, exclusão e visualização de animais disponíveis para adoção | Planejada |
-| Cadastro de tutores e abrigos | Registro de tutores e abrigos/protetores, com endereço preenchido via ViaCEP | Planejada |
-| Histórico de vacinas e consultas | Registro e consulta do histórico de saúde de cada animal | Planejada |
-| Busca de animais | Filtro por porte, idade, espécie e localização (CEP) | Planejada |
-| Relatório de adoções | Animais adotados no mês, com filtros | Planejada |
-| Relatório de vacinas pendentes | Calendário de vacinas a vencer | Planejada |
-| API REST própria | Endpoint público (`GET /api/animais`) para consumo por terceiros | Planejada |
-| Importação de dados de raça | Consumo da Dog API / Cat API ao cadastrar um animal | Planejada |
-| Identidade visual | Paleta, tipografia e logotipo aplicados de forma consistente | Em andamento |
+| Cadastro de animais | Criação, edição, exclusão e visualização de animais disponíveis para adoção | Implementada |
+| Cadastro de tutores e abrigos | Registro de tutores e abrigos/protetores, com endereço preenchido via ViaCEP | Implementada  |
+| Histórico de vacinas e consultas | Registro e consulta do histórico de saúde de cada animal | Implementada |
+| Busca de animais | Filtro por porte, idade, espécie e localização (CEP) | Implementada |
+| Relatório de adoções | Animais adotados no mês, com filtros | Implementada |
+| Relatório de vacinas pendentes | Calendário de vacinas a vencer | Implementada |
+| API REST própria | Endpoint público (`GET /api/animais`) para consumo por terceiros | Implementada |
+| Importação de dados de raça | Consumo da Dog API / Cat API ao cadastrar um animal | Implementada |
+| Identidade visual | Paleta, tipografia e logotipo aplicados de forma consistente | Implementada |
  
-*Atualize a coluna “Status” (Implementada / Em andamento / Planejada) conforme o desenvolvimento avança.*
  
 ### Requisitos não funcionais
  
@@ -197,13 +196,13 @@ Documentação completa da API: [PREENCHER — link para Swagger/Redoc ou `docs/
  
 ## 7. Participantes
  
-| Nome | Matrícula | Função no projeto |
+| Nome  Função no projeto |
 | --- | --- | --- |
-| Bruna | [PREENCHER] | Documentação / Visão |
-| Rafael | [PREENCHER] | Arquitetura / Dados |
-| Isadora | [PREENCHER] | Design / Identidade Visual |
-| Ana Clara | [PREENCHER] | Dev Backend |
-| Renata | [PREENCHER] | Dev Integração (busca, relatórios, APIs externas) |
+| Bruna  | Documentação / Visão |
+| Rafael  | Arquitetura / Dados |
+| Isadora  | Design / Identidade Visual |
+| Ana Clara  | Dev Backend |
+| Renata | Dev Integração (busca, relatórios, APIs externas) |
  
 **Professor(a) responsável:** Felippe Pires Ferreira
  
@@ -352,6 +351,8 @@ Use mensagens curtas e no imperativo, por exemplo:
 - [ ] Integrar Dog API / Cat API no cadastro de animais
 - [ ] Executar e documentar análises SAST e DAST
 - [ ] Publicar aplicação com HTTPS
+
+tudo feito
 ---
  
 ## 15. Licença, referências e contato
@@ -374,9 +375,9 @@ Este material destina-se a fins educacionais.
   
 ### Referências
  
-- [PREENCHER — bibliografia consultada, documentação oficial das tecnologias usadas]
+- Uso de IAs como Claude, Gemini e do Figma]
 ### Contato
  
-Dúvidas sobre o projeto: [PREENCHER — e-mail institucional do grupo ou issue no repositório]
+
  
 **Agradecimentos:** Professor Felippe Pires Ferreira
